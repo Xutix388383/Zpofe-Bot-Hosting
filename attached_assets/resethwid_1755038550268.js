@@ -1,11 +1,10 @@
-
 const { SlashCommandBuilder } = require('discord.js');
 const axios = require('axios');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('deletekey')
-    .setDescription('Delete a key permanently')
+    .setName('resethwid')
+    .setDescription('Reset HWID for a key')
     .addStringOption(opt => opt.setName('key').setDescription('License key').setRequired(true)),
   async execute(interaction) {
     // Check if user has the required role
@@ -16,14 +15,14 @@ module.exports = {
 
     try {
       const key = interaction.options.getString('key');
-      const res = await axios.post(`${process.env.API_URL}/deletekey`, { key });
+      const res = await axios.post(`${process.env.API_URL}/resethwid`, { key });
 
       await interaction.reply(res.data.success
-        ? `🗑️ Key \`${key}\` deleted`
+        ? `✅ HWID reset for \`${key}\``
         : `❌ Failed: ${res.data.message}`);
     } catch (error) {
-      console.error('Delete Key API Error:', error.response?.data || error.message);
-      await interaction.reply('❌ Failed to delete key');
+      console.error('Reset HWID API Error:', error.response?.data || error.message);
+      await interaction.reply('❌ Failed to reset HWID');
     }
   }
 };
